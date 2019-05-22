@@ -12,16 +12,22 @@ class GalleryList extends StatefulWidget {
 }
 
 class GalleryListState extends State<GalleryList> {
-  String url = 'https://api.unsplash.com/photos/?client_id=cf49c08b444ff4cb9e4d126b7e9f7513ba1ee58de7906e4360afc1a33d1bf4c0';
+  int page = 1;
   List data = [];
   Future<String> makeRequest() async {
     var response = await http
-        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+        .get(Uri.encodeFull(getUrl()), headers: {"Accept": "application/json"});
 
     setState(() {
       var extractdata = json.decode(response.body);
       data.addAll(extractdata);
     });
+  }
+
+  String getUrl() {
+    String url = 'https://api.unsplash.com/photos/?client_id=cf49c08b444ff4cb9e4d126b7e9f7513ba1ee58de7906e4360afc1a33d1bf4c0&page=$page';
+    page += page;
+    return url;
   }
 
   @override
@@ -51,17 +57,33 @@ class GalleryListState extends State<GalleryList> {
                   backgroundImage:
                   new NetworkImage(data[i]["urls"]["small"]),
                 ),
+
                 onTap: () {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>
-                          new ShowImage(data[i])));
+                          new ShowImage(data[i])
+                      )
+                  );
                 },
               );
-            }
-        )
+
+            },
+
+        ),
+      resizeToAvoidBottomPadding: addImage(),
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: _addItem,
+//        child: Icon(Icons.add),
+//      ),
     );
+  }
+
+  addImage() {
+    setState(() {
+      this.makeRequest();
+    });
   }
 }
 
