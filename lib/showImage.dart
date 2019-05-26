@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 
 class ShowImage extends StatelessWidget {
-  ShowImage(this.data);
   final data;
+
+  ShowImage(this.data);
+
   @override
   Widget build(BuildContext context) => new Scaffold(
       appBar: new AppBar(title: new Text('Second Page')),
